@@ -136,38 +136,22 @@ def encode(plain):
 """
 
 def decodePerm(header):
-    decoded = str(nineToDec(scrambleToNine(header, 0)))
+    decoded = str(int(str(scrambleToNine(header, 0)), 9))
     index = int(decoded[0]) + 1
     shuffle = list(decoded[index : index + 9])
     for key in shuffle:
         shuffleNums[int(key)] = shuffle.index(key)
 
 def decodeLength(header):
-    decoded = str(nineToDec(scrambleToNine(header, 1)))
+    decoded = str(int(str(scrambleToNine(header, 1)), 9))
     index = int(decoded[0]) + 2
     return decoded[index : index + int(decoded[1])]
 
 def nineToStr(nine):
-    return decToStr(nineToDec(nine))
+    return decToStr(int(str(nine), 9))
 
 def decToStr(dec):
-    result = ''
-    binary = str(bin(dec))[2:]
-    if not len(binary) % 8 == 0:
-        binary = '0' + binary
-    for i in range(len(str(binary)) // 8):
-        result += chr(int(binary[i * 8:i * 8 + 8], 2))
-    return result
-
-def nineToDec(nine):
-    decimal = 0
-    length = len(str(nine)) - 1
-    power = length
-    while(power > -1):
-        mult = 9 ** power
-        decimal += mult * int(str(nine)[length - power])
-        power -= 1
-    return decimal
+return bytes.fromhex(hex(dec).replace('L','')[2:]).decode('utf-8')
 
 def scrambleToNine(scramble, dict):
     result = ''
